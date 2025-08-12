@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
+import API from '../api';
 import { setCredentials } from '../store/slices/authSlice';
 import { toast } from 'react-toastify';
 import Loader from '../components/Loader';
@@ -27,7 +27,7 @@ const LoginPage = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const { data } = await axios.post('/api/users/login', { email, password });
+      const { data } = await API.post('/api/users/login', { email, password });
       dispatch(setCredentials(data));
       navigate(redirect);
     } catch (error) {

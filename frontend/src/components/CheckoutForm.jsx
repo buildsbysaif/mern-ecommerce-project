@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { useSelector } from 'react-redux';
-import axios from 'axios';
+import API from '../api';
 import { toast } from 'react-toastify';
 
 const CheckoutForm = ({ order, refetchOrder }) => {
@@ -43,7 +43,7 @@ const CheckoutForm = ({ order, refetchOrder }) => {
           email_address: userInfo.email,
       };
 
-      await axios.put(`http://localhost:5000/api/orders/${order._id}/pay`, paymentResult, config);
+      await API.put(`http://localhost:5000/api/orders/${order._id}/pay`, paymentResult, config);
 
       toast.success('Payment Successful!');
       refetchOrder(); // Refetch to show the 'Paid' status

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
+import API from '../api';
 import { setCredentials } from '../store/slices/authSlice';
 import { toast } from 'react-toastify'; 
 import Loader from '../components/Loader'; 
@@ -24,7 +24,7 @@ const ProfilePage = () => {
       setLoadingOrders(true);
       try {
         const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
-        const { data } = await axios.get('/api/orders/myorders', config);
+        const { data } = await API.get('/api/orders/myorders', config);
         setOrders(data);
       } catch (error) {
         toast.error(error?.response?.data?.message || error.message);
@@ -48,7 +48,7 @@ const ProfilePage = () => {
       setLoadingUpdate(true);
       try {
         const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
-        const { data } = await axios.put('/api/users/profile', { name, email, password }, config);
+        const { data } = await API.put('/api/users/profile', { name, email, password }, config);
         dispatch(setCredentials(data));
         toast.success('Profile Updated Successfully'); // Use success toast
       } catch (error) {

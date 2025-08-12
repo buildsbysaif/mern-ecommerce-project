@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import axios from 'axios';
+import API from '../api';
 import Loader from '../components/Loader';
 import { toast } from 'react-toastify';
 import { loadStripe } from '@stripe/stripe-js';
@@ -22,7 +22,7 @@ const OrderPage = () => {
   const fetchOrder = async () => {
     try {
       const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
-      const { data } = await axios.get(`/api/orders/${orderId}`, config);
+      const { data } = await API.get(`/api/orders/${orderId}`, config);
       setOrder(data);
     } catch (err) {
       setError(err?.response?.data?.message || err.message);

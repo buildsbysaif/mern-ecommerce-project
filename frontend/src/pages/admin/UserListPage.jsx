@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import axios from 'axios';
+import API from '../../api';
 import { toast } from 'react-toastify';
 import Loader from '../../components/Loader';
 // --- IMPORT ICONS ---
@@ -17,7 +17,7 @@ const UserListPage = () => {
     const fetchUsers = async () => {
       try {
         const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
-        const { data } = await axios.get('/api/users', config);
+        const { data } = await API.get('/api/users', config);
         setUsers(data);
       } catch (error) {
         toast.error(error?.response?.data?.message || error.message);
@@ -32,7 +32,7 @@ const UserListPage = () => {
     if (window.confirm('Are you sure you want to delete this user?')) {
       try {
         const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
-        await axios.delete(`/api/users/${id}`, config);
+        await API.delete(`/api/users/${id}`, config);
         setUsers(users.filter((user) => user._id !== id));
         toast.success('User deleted');
       } catch (error) {

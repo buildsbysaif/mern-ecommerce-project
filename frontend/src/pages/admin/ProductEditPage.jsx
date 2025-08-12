@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import axios from 'axios';
+import API from '../../api';
 
 const ProductEditPage = () => {
   const { id: productId } = useParams();
@@ -21,7 +21,7 @@ const ProductEditPage = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const { data } = await axios.get(`/api/products/${productId}`);
+        const { data } = await API.get(`/api/products/${productId}`);
         setName(data.name);
         setPrice(data.price);
         setImage(data.image);
@@ -41,7 +41,7 @@ const ProductEditPage = () => {
     try {
       const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
       const productData = { name, price, image, brand, category, countInStock, description };
-      await axios.put(`/api/products/${productId}`, productData, config);
+      await API.put(`/api/products/${productId}`, productData, config);
       
       navigate('/admin/productlist');
     } catch (error) {
@@ -57,7 +57,7 @@ const ProductEditPage = () => {
       const config = {
         headers: { 'Content-Type': 'multipart/form-data' },
       };
-      const { data } = await axios.post('/api/upload', formData, config);
+      const { data } = await API.post('/api/upload', formData, config);
       setImage(data.image);
       setUploading(false);
     } catch (error) {

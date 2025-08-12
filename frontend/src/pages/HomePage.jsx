@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import axios from 'axios';
+import API from '../api';
 import Product from '../components/Product';
 import Loader from '../components/Loader';
 import ProductCarousel from '../components/ProductCarousel';
@@ -16,7 +16,7 @@ const HomePage = () => {
       setLoading(true);
       try {
         
-        const { data } = await axios.get(`/api/products`, {
+        const { data } = await API.get(`/api/products`, {
         params: { keyword, category },
       });
         setProducts(data);

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
+import API from '../api';
 import { setCredentials } from '../store/slices/authSlice';
 
 const RegisterPage = () => {
@@ -32,7 +32,7 @@ const RegisterPage = () => {
       console.error('Passwords do not match');
     } else {
       try {
-        const { data } = await axios.post('/api/users/register', { name, email, password });
+        const { data } = await API.post('/api/users/register', { name, email, password });
         dispatch(setCredentials(data));
         navigate(redirect);
       } catch (error) {

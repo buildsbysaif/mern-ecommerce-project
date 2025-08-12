@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
+import API from '../api';
 import { addToCart } from '../store/slices/cartSlice';
 import Rating from '../components/Rating';
 import Loader from '../components/Loader';
@@ -22,7 +22,7 @@ const ProductPage = () => {
   const fetchProduct = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.get(`/api/products/${productId}`);
+      const { data } = await API.get(`/api/products/${productId}`);
       setProduct(data);
     } catch (error) {
       console.error(error);
@@ -44,7 +44,7 @@ const ProductPage = () => {
     e.preventDefault();
     try {
       const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
-      await axios.post(`/api/products/${productId}/reviews`, { rating, comment }, config);
+      await API.post(`/api/products/${productId}/reviews`, { rating, comment }, config);
       toast.success('Review Submitted!');
       setRating(0);
       setComment('');

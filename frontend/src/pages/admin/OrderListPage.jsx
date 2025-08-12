@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import axios from 'axios';
+import API from '../../api';
 
 const OrderListPage = () => {
   const [orders, setOrders] = useState([]);
@@ -15,7 +15,7 @@ const OrderListPage = () => {
       const config = {
         headers: { Authorization: `Bearer ${userInfo.token}` },
       };
-      const { data } = await axios.get('/api/orders', config);
+      const { data } = await API.get('/api/orders', config);
       setOrders(data);
     } catch (error) {
       console.error(error?.response?.data?.message || error.message);
@@ -32,7 +32,7 @@ const OrderListPage = () => {
     if (window.confirm('Mark this order as delivered?')) {
       try {
         const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
-        await axios.put(`/api/orders/${orderId}/deliver`, {}, config);
+        await API.put(`/api/orders/${orderId}/deliver`, {}, config);
         fetchOrders(); 
       } catch (error) {
         console.error(error?.response?.data?.message || error.message);

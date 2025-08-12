@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import axios from 'axios';
+import API from '../../api';
 
 const ProductListPage = () => {
   const [products, setProducts] = useState([]);
@@ -13,7 +13,7 @@ const ProductListPage = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const { data } = await axios.get('/api/products');
+        const { data } = await API.get('/api/products');
         setProducts(data);
       } catch (error) {
         console.error(error);
@@ -28,7 +28,7 @@ const ProductListPage = () => {
     if (window.confirm('Are you sure you want to delete this product?')) {
       try {
         const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
-        await axios.delete(`/api/products/${id}`, config);
+        await API.delete(`/api/products/${id}`, config);
         setProducts(products.filter((p) => p._id !== id));
       } catch (error) {
         console.error(error?.response?.data?.message || error.message);
@@ -40,7 +40,7 @@ const ProductListPage = () => {
     if (window.confirm('Are you sure you want to create a new product?')) {
       try {
         const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
-        const { data } = await axios.post('/api/products', {}, config);
+        const { data } = await API.post('/api/products', {}, config);
         navigate(`/admin/product/${data._id}/edit`);
       } catch (error) {
         console.error(error?.response?.data?.message || error.message);
