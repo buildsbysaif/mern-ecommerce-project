@@ -2,23 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import API from '../../api';
+import { toast } from 'react-toastify';
+import Loader from '../../components/Loader';
+import { FaTimes } from 'react-icons/fa';
 
 const OrderListPage = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const { userInfo } = useSelector((state) => state.auth);
-
   const fetchOrders = async () => {
     setLoading(true);
     try {
-      const config = {
-        headers: { Authorization: `Bearer ${userInfo.token}` },
-      };
-      const { data } = await API.get('/api/orders', config);
+      
+      const { data } = await API.get('/api/orders');
       setOrders(data);
     } catch (error) {
-      console.error(error?.response?.data?.message || error.message);
+      toast.error(error?.response?.data?.message || error.message);
     } finally {
       setLoading(false);
     }
@@ -26,16 +25,17 @@ const OrderListPage = () => {
 
   useEffect(() => {
     fetchOrders();
-  }, [userInfo.token]);
+  }, []);
 
   const deliverHandler = async (orderId) => {
     if (window.confirm('Mark this order as delivered?')) {
       try {
-        const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
-        await API.put(`/api/orders/${orderId}/deliver`, {}, config);
+        
+        await API.put(`/api/orders/${orderId}/deliver`, {});
+        toast.success('Order marked as delivered');
         fetchOrders(); 
       } catch (error) {
-        console.error(error?.response?.data?.message || error.message);
+        toast.error(error?.response?.data?.message || error.message);
       }
     }
   };
@@ -43,7 +43,7 @@ const OrderListPage = () => {
   return (
     <div>
       <h1 className="text-3xl font-bold mb-6">Orders</h1>
-      {loading ? <p>Loading...</p> : (
+      {loading ? <Loader /> : (
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white">
             <thead className="bg-gray-800 text-white">
@@ -68,7 +68,7 @@ const OrderListPage = () => {
                     {order.isPaid ? (
                       <span className="text-green-500 font-bold">{new Date(order.paidAt).toLocaleDateString()}</span>
                     ) : (
-                      <i className="fas fa-times text-red-500"></i>
+                      <FaTimes className="text-red-500" />
                     )}
                   </td>
                   <td className="py-3 px-4">

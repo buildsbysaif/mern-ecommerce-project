@@ -22,7 +22,7 @@ const CheckoutForm = ({ order, refetchOrder }) => {
     const cardElement = elements.getElement(CardElement);
 
     try {
-      // 1. Create a Payment Method
+      // 1. Create a Payment Method with Stripe
       const { error, paymentMethod } = await stripe.createPaymentMethod({
         type: 'card',
         card: cardElement,
@@ -34,19 +34,19 @@ const CheckoutForm = ({ order, refetchOrder }) => {
         return;
       }
 
-      // 2. Call backend to update the order to paid
-      const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
+      // 2. Call your backend to update the order to paid
       const paymentResult = {
-          id: paymentMethod.id,
-          status: 'COMPLETED',
-          update_time: new Date().toISOString(),
-          email_address: userInfo.email,
+        id: paymentMethod.id,
+        status: 'COMPLETED',
+        update_time: new Date().toISOString(),
+        email_address: userInfo.email,
       };
 
-      await API.put(`http://localhost:5000/api/orders/${order._id}/pay`, paymentResult, config);
+      
+      await API.put(`/api/orders/${order._id}/pay`, paymentResult);
 
       toast.success('Payment Successful!');
-      refetchOrder(); // Refetch to show the 'Paid' status
+      refetchOrder(); // Refetch order to show the 'Paid' status
     } catch (err) {
       toast.error(err?.response?.data?.message || err.message);
     } finally {

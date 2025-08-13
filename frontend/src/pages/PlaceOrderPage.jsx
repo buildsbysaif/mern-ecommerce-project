@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios';
 import { clearCartItems } from '../store/slices/cartSlice';
+import API from '../api'; 
+import { toast } from 'react-toastify';
 
 const PlaceOrderPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
-  const { userInfo } = useSelector((state) => state.auth); //Get user info for token
 
   useEffect(() => {
     if (!cart.shippingAddress.address) {
@@ -20,35 +20,28 @@ const PlaceOrderPage = () => {
 
   // Calculations
   const itemsPrice = cart.cartItems.reduce((acc, item) => acc + item.qty * item.price, 0);
-  const taxPrice = itemsPrice * 0.18; // 18% GST
-  const shippingPrice = 0; // Assuming free shipping for now
+  const taxPrice = itemsPrice * 0.18;
+  const shippingPrice = 0;
   const totalPrice = itemsPrice + taxPrice + shippingPrice;
 
-  // Handler to place the order
   const placeOrderHandler = async () => {
     try {
-      const res = await axios.post(
-        'http://localhost:5000/api/orders',
-        {
-          orderItems: cart.cartItems,
-          shippingAddress: cart.shippingAddress,
-          paymentMethod: cart.paymentMethod,
-          itemsPrice: itemsPrice.toFixed(2),
-          taxPrice: taxPrice.toFixed(2),
-          shippingPrice: shippingPrice.toFixed(2),
-          totalPrice: totalPrice.toFixed(2),
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${userInfo.token}`, // Send token for authentication
-          },
-        }
-      );
+      
+      const res = await API.post('/api/orders', {
+        orderItems: cart.cartItems,
+        shippingAddress: cart.shippingAddress,
+        paymentMethod: cart.paymentMethod,
+        itemsPrice: itemsPrice.toFixed(2),
+        taxPrice: taxPrice.toFixed(2),
+        shippingPrice: shippingPrice.toFixed(2),
+        totalPrice: totalPrice.toFixed(2),
+      });
+      
+
       dispatch(clearCartItems());
       navigate(`/order/${res.data._id}`);
     } catch (error) {
-      
-      console.error(error?.response?.data?.message || error.message);
+      toast.error(error?.response?.data?.message || error.message);
     }
   };
 

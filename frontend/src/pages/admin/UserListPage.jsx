@@ -4,20 +4,17 @@ import { useSelector } from 'react-redux';
 import API from '../../api';
 import { toast } from 'react-toastify';
 import Loader from '../../components/Loader';
-// --- IMPORT ICONS ---
-import { FaCheck, FaTimes, FaEdit, FaTrash } from 'react-icons/fa';
+import { FaCheck, FaTimes, FaTrash } from 'react-icons/fa';
 
 const UserListPage = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const { userInfo } = useSelector((state) => state.auth);
-
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
-        const { data } = await API.get('/api/users', config);
+        
+        const { data } = await API.get('/api/users');
         setUsers(data);
       } catch (error) {
         toast.error(error?.response?.data?.message || error.message);
@@ -26,13 +23,13 @@ const UserListPage = () => {
       }
     };
     fetchUsers();
-  }, [userInfo.token]);
+  }, []); 
 
   const deleteHandler = async (id) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
       try {
-        const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
-        await API.delete(`/api/users/${id}`, config);
+        
+        await API.delete(`/api/users/${id}`);
         setUsers(users.filter((user) => user._id !== id));
         toast.success('User deleted');
       } catch (error) {
@@ -63,7 +60,6 @@ const UserListPage = () => {
                   <td className="py-3 px-4">{user.name}</td>
                   <td className="py-3 px-4"><a href={`mailto:${user.email}`} className="text-blue-500">{user.email}</a></td>
                   <td className="py-3 px-4">
-                    {/* --- UPDATED ICONS --- */}
                     {user.isAdmin ? (
                       <FaCheck className="text-green-500" />
                     ) : (
@@ -71,7 +67,7 @@ const UserListPage = () => {
                     )}
                   </td>
                   <td className="py-3 px-4">
-                    <button onClick={() => deleteHandler(user._id)} className="text-red-500">
+                    <button onClick={() => deleteHandler(user._id)} className="text-red-500 hover:text-red-700">
                       <FaTrash />
                     </button>
                   </td>

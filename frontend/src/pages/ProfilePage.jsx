@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import API from '../api';
 import { setCredentials } from '../store/slices/authSlice';
-import { toast } from 'react-toastify'; 
-import Loader from '../components/Loader'; 
+import { toast } from 'react-toastify';
+import Loader from '../components/Loader';
 
 const ProfilePage = () => {
   const [name, setName] = useState('');
@@ -13,8 +13,8 @@ const ProfilePage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const [orders, setOrders] = useState([]);
-  const [loadingOrders, setLoadingOrders] = useState(true); 
-  const [loadingUpdate, setLoadingUpdate] = useState(false); 
+  const [loadingOrders, setLoadingOrders] = useState(true);
+  const [loadingUpdate, setLoadingUpdate] = useState(false);
 
   const dispatch = useDispatch();
   const { userInfo } = useSelector((state) => state.auth);
@@ -23,8 +23,8 @@ const ProfilePage = () => {
     const fetchOrders = async () => {
       setLoadingOrders(true);
       try {
-        const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
-        const { data } = await API.get('/api/orders/myorders', config);
+        
+        const { data } = await API.get('/api/orders/myorders');
         setOrders(data);
       } catch (error) {
         toast.error(error?.response?.data?.message || error.message);
@@ -47,12 +47,12 @@ const ProfilePage = () => {
     } else {
       setLoadingUpdate(true);
       try {
-        const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
-        const { data } = await API.put('/api/users/profile', { name, email, password }, config);
+        
+        const { data } = await API.put('/api/users/profile', { name, email, password });
         dispatch(setCredentials(data));
-        toast.success('Profile Updated Successfully'); // Use success toast
+        toast.success('Profile Updated Successfully');
       } catch (error) {
-        toast.error(error?.response?.data?.message || error.message); // Use error toast
+        toast.error(error?.response?.data?.message || error.message);
       } finally {
         setLoadingUpdate(false);
       }
@@ -61,10 +61,10 @@ const ProfilePage = () => {
 
   return (
     <div className="grid md:grid-cols-3 gap-8">
-      {/* Update Profile Section */}
+      
       <div className="md:col-span-1">
         <h2 className="text-2xl font-bold mb-4">User Profile</h2>
-        {loadingUpdate && <Loader />} {/* Show loader during update */}
+        {loadingUpdate && <Loader />}
         <form onSubmit={submitHandler} className="bg-white shadow-md rounded px-8 pt-6 pb-8">
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">Name</label>
@@ -92,12 +92,20 @@ const ProfilePage = () => {
       <div className="md:col-span-2">
         <h2 className="text-2xl font-bold mb-4">My Orders</h2>
         {loadingOrders ? (
-          <Loader /> 
+          <Loader />
         ) : (
           <div className="overflow-x-auto">
-            
             <table className="min-w-full bg-white">
-              {/* ... Table head ... */}
+              <thead className="bg-gray-800 text-white">
+                <tr>
+                  <th className="text-left py-3 px-4 uppercase font-semibold text-sm">ID</th>
+                  <th className="text-left py-3 px-4 uppercase font-semibold text-sm">Date</th>
+                  <th className="text-left py-3 px-4 uppercase font-semibold text-sm">Total</th>
+                  <th className="text-left py-3 px-4 uppercase font-semibold text-sm">Paid</th>
+                  <th className="text-left py-3 px-4 uppercase font-semibold text-sm">Delivered</th>
+                  <th className="text-left py-3 px-4 uppercase font-semibold text-sm"></th>
+                </tr>
+              </thead>
               <tbody className="text-gray-700">
                 {orders.map((order) => (
                   <tr key={order._id} className="border-b hover:bg-gray-100">
