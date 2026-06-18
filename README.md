@@ -8,8 +8,6 @@
 
 ---
 
-![E-Commerce Pro Screenshot](https://i.postimg.cc/2ySF6t7R/homepage-screenshot.png)
-
 ## 1. Project Overview
 
 This repository contains the source code for **E-Commerce Pro**, a complete, full-stack e-commerce platform. The project was developed as part of my internship at Navodita Infotech and fulfills all the core requirements, including user authentication, a detailed product catalog, a persistent shopping cart, secure payment processing via Stripe, and a comprehensive order management system for administrators.
