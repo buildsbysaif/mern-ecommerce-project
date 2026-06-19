@@ -14,8 +14,6 @@
 
 **Live Demo:** [E-Commerce Pro on Netlify](https://buildsbysaif-ecommerce-pro.netlify.app/)  
 
-![E-Commerce Pro Screenshot](https://i.postimg.cc/2ySF6t7R/homepage-screenshot.png)
-
 
 ## 📖 Project Overview
 
